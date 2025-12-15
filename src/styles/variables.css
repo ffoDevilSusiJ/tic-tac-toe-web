@@ -1,0 +1,71 @@
+:root {
+  /* Colors */
+  --color-primary: #ff6b9d;
+  --color-primary-dark: #c239b3;
+  --color-primary-light: #ffeef8;
+  --color-primary-lighter: #ffe4f1;
+  
+  --color-secondary: #ffd4e8;
+  --color-accent: #ff85a8;
+  
+  --color-text-primary: #333;
+  --color-text-secondary: #666;
+  --color-text-tertiary: #999;
+  
+  --color-background: #ffeef8;
+  --color-background-gradient-start: #ffeef8;
+  --color-background-gradient-middle: #ffe4f1;
+  --color-background-gradient-end: #ffd4e8;
+  
+  --color-white: #ffffff;
+  --color-success: #22c55e;
+  --color-success-light: #4ade80;
+  
+  /* Spacing */
+  --spacing-xs: 5px;
+  --spacing-sm: 10px;
+  --spacing-md: 15px;
+  --spacing-lg: 20px;
+  --spacing-xl: 30px;
+  --spacing-2xl: 40px;
+  --spacing-3xl: 50px;
+  
+  /* Border Radius */
+  --radius-sm: 10px;
+  --radius-md: 15px;
+  --radius-lg: 20px;
+  --radius-xl: 30px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(255, 105, 180, 0.1);
+  --shadow-md: 0 8px 20px rgba(255, 105, 180, 0.2);
+  --shadow-lg: 0 20px 60px rgba(255, 105, 180, 0.15);
+  --shadow-xl: 0 25px 70px rgba(255, 105, 180, 0.25);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Font Sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 42px;
+  
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Z-index */
+  --z-index-modal: 1000;
+  --z-index-dropdown: 100;
+  --z-index-header: 50;
+}

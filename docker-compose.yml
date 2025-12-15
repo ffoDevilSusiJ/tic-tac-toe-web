@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_WS_URL=ws://localhost:8080
+    container_name: tictactoe-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - tictactoe-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  tictactoe-network:
+    external: true
