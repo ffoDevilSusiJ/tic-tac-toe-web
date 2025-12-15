@@ -64,11 +64,6 @@ code {
   background: var(--color-primary-dark);
 }
 
-/* Selection styling */
-::selection {
-  background: var(--color-primary-light);
-  color: var(--color-primary-dark);
-}
 
 ::-moz-selection {
   background: var(--color-primary-light);
