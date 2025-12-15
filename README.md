@@ -16,7 +16,7 @@ git clone https://github.com/ffoDevilSusiJ/tic-tac-toe-web.git
 cd tic-tac-toe-web
 
 # 2. Создаем сеть
-docker create network tictactoe-network
+docker network create tictactoe-network
 
 # 3. Запускаем
 docker compose up -d
