@@ -62,6 +62,44 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     makeMove: makeLocalMoveInternal,
   } = useGameState();
 
+  const makeComputerMove = useCallback((currentBoard: (PlayerSymbol | null)[]) => {
+    const emptyCells: number[] = [];
+    currentBoard.forEach((cell, index) => {
+      if (cell === null) {
+        emptyCells.push(index);
+      }
+    });
+
+    if (emptyCells.length > 0) {
+      const randomIndex = Math.floor(Math.random() * emptyCells.length);
+      const cell = emptyCells[randomIndex];
+
+      setTimeout(() => {
+        makeLocalMoveInternal(cell, 'O');
+      }, 500);
+    }
+  }, [makeLocalMoveInternal]);
+
+  const sendGameResult = useCallback(async (isWin: boolean) => {
+    if (!playerNickname) return;
+
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
+      await fetch(`${backendUrl}/api/game-result`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: playerNickname,
+          isWin,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to send game result:', error);
+    }
+  }, [playerNickname]);
+
   // Обработка сообщений от WebSocket
   useEffect(() => {
     const handleMessage = (message: WSMessage) => {
@@ -223,52 +261,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     setPlayerNicknameState(nickname);
   }, []);
 
-  const sendGameResult = useCallback(async (isWin: boolean) => {
-    if (!playerNickname) return;
-
-    try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
-      await fetch(`${backendUrl}/api/game-result`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: playerNickname,
-          isWin,
-        }),
-      });
-    } catch (error) {
-      console.error('Failed to send game result:', error);
-    }
-  }, [playerNickname]);
-
   const startComputerGame = useCallback(() => {
     console.log('🎮 Starting computer game');
-    // Start game locally (no WebSocket needed)
     startGame('X', { player: 0, computer: 0 }, 1);
     setOpponentUuid('computer');
   }, [startGame]);
-
-  const makeComputerMove = useCallback((currentBoard: (PlayerSymbol | null)[]) => {
-    // Find all empty cells
-    const emptyCells: number[] = [];
-    currentBoard.forEach((cell, index) => {
-      if (cell === null) {
-        emptyCells.push(index);
-      }
-    });
-
-    if (emptyCells.length > 0) {
-      // Random move
-      const randomIndex = Math.floor(Math.random() * emptyCells.length);
-      const cell = emptyCells[randomIndex];
-
-      setTimeout(() => {
-        makeLocalMoveInternal(cell, 'O');
-      }, 500); // Small delay to make it feel more natural
-    }
-  }, [makeLocalMoveInternal]);
 
   const makeLocalMove = useCallback((cell: number) => {
     if (!gameState.isActive || gameState.currentPlayer !== gameState.mySymbol) {
