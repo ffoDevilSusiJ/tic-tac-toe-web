@@ -4,7 +4,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background: rgba(255, 182, 193, 0.4);
+  backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,11 +24,11 @@
 
 .modal {
   background: white;
-  border-radius: 12px;
+  border-radius: 30px;
   padding: 40px;
   max-width: 400px;
   width: 90%;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 70px rgba(255, 105, 180, 0.25);
   animation: slideUp 0.3s ease-out;
 }
 
@@ -45,7 +46,7 @@
 .title {
   font-size: 28px;
   font-weight: 700;
-  color: #333;
+  color: #ff6b9d;
   margin: 0 0 10px 0;
   text-align: center;
 }
@@ -61,8 +62,8 @@
   width: 100%;
   padding: 16px;
   font-size: 18px;
-  border: 2px solid #e0e8f0;
-  border-radius: 8px;
+  border: 2px solid #ffe4f1;
+  border-radius: 15px;
   background: white;
   color: #333;
   margin-bottom: 20px;
@@ -76,8 +77,8 @@
 
 .input:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  border-color: #ff6b9d;
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
 }
 
 .button {
@@ -86,16 +87,18 @@
   font-size: 18px;
   font-weight: 600;
   color: white;
-  background: #4a90e2;
+  background: linear-gradient(135deg, #ff6b9d 0%, #c239b3 100%);
   border: none;
-  border-radius: 8px;
+  border-radius: 15px;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
 }
 
 .button:hover:not(:disabled) {
-  background: #357abd;
-  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+  background: linear-gradient(135deg, #ff85a8 0%, #c239b3 100%);
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+  transform: translateY(-2px);
 }
 
 .button:active:not(:disabled) {
@@ -105,4 +108,40 @@
 .button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.hint {
+  margin-top: 20px;
+  padding: 15px;
+  background: #ffeef8;
+  border-radius: 15px;
+  border: 2px solid #ffe4f1;
+  text-align: center;
+}
+
+.hintText {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 10px 0;
+  line-height: 1.6;
+}
+
+.botLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff6b9d;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.botLink:hover {
+  color: #c239b3;
+  transform: translateY(-1px);
+}
+
+.botIcon {
+  font-size: 18px;
 }

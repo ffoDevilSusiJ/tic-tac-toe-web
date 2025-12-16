@@ -38,6 +38,20 @@ export const NicknameModal: React.FC<NicknameModalProps> = ({ onSubmit }) => {
             Начать игру
           </button>
         </form>
+        <div className={styles.hint}>
+          <p className={styles.hintText}>
+            🎁 Победите компьютер и получите промокод!
+          </p>
+          <a
+            href="https://t.me/bem_tic_tac_toe_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.botLink}
+          >
+            <span className={styles.botIcon}>📱</span>
+            Открыть Telegram бот
+          </a>
+        </div>
       </div>
     </div>
   );
