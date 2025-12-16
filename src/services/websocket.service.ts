@@ -19,7 +19,7 @@ export class WebSocketService {
 
     this.isConnecting = true;
 
-    console.log('🔌 Connecting to WebSocket:', this.url);
+    console.log('Connecting to WebSocket:', this.url);
 
     this.socket = io(this.url, {
       transports: ['websocket', 'polling'],
@@ -29,54 +29,54 @@ export class WebSocketService {
     });
 
     this.socket.on('connect', () => {
-      console.log('✅ WebSocket connected:', this.socket?.id);
+      console.log('WebSocket connected:', this.socket?.id);
       this.isConnecting = false;
     });
 
     this.socket.on('disconnect', (reason) => {
-      console.log('❌ WebSocket disconnected:', reason);
+      console.log('WebSocket disconnected:', reason);
       this.isConnecting = false;
     });
 
     this.socket.on('connect_error', (error) => {
-      console.error('❌ Connection error:', error);
+      console.error('Connection error:', error);
       this.isConnecting = false;
     });
 
     // Слушаем все типы сообщений
     this.socket.on('game_start', (data: WSMessage) => {
-      console.log('📨 Received game_start:', data);
+      console.log('Received game_start:', data);
       this.notifyHandlers(data);
     });
 
     this.socket.on('player_move', (data: WSMessage) => {
-      console.log('📨 Received player_move:', data);
+      console.log('Received player_move:', data);
       this.notifyHandlers(data);
     });
 
     this.socket.on('game_end', (data: WSMessage) => {
-      console.log('📨 Received game_end:', data);
+      console.log('Received game_end:', data);
       this.notifyHandlers(data);
     });
 
     this.socket.on('round_start', (data: WSMessage) => {
-      console.log('📨 Received round_start:', data);
+      console.log('Received round_start:', data);
       this.notifyHandlers(data);
     });
 
     this.socket.on('error', (data: WSMessage) => {
-      console.error('📨 Received error:', data);
+      console.error('Received error:', data);
       this.notifyHandlers(data);
     });
   }
 
   send(message: WSMessage): void {
     if (!this.socket?.connected) {
-      console.error('❌ WebSocket is not connected');
+      console.error('WebSocket is not connected');
       return;
     }
 
-    console.log('📤 Sending:', message.type, message);
+    console.log('Sending:', message.type, message);
     this.socket.emit(message.type, message);
   }
 
@@ -90,7 +90,7 @@ export class WebSocketService {
 
   disconnect(): void {
     if (this.socket) {
-      console.log('🔌 Disconnecting WebSocket');
+      console.log('Disconnecting WebSocket');
       this.socket.disconnect();
       this.socket = null;
     }

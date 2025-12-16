@@ -14,13 +14,13 @@
   position: absolute;
   top: 20px;
   left: 20px;
-  background: linear-gradient(135deg, #ff6b9d 0%, #c239b3 100%);
+  background: #4a90e2;
   color: white;
   padding: 8px 16px;
-  border-radius: 12px;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
-  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
   z-index: 10;
 }
 
@@ -31,8 +31,9 @@
   align-items: center;
   margin-bottom: 30px;
   padding: 20px;
-  background: linear-gradient(135deg, #ffeef8 0%, #ffe4f1 100%);
-  border-radius: 20px;
+  background: #f5f9fc;
+  border-radius: 12px;
+  border: 1px solid #e0e8f0;
 }
 
 .scoreItem {
@@ -54,11 +55,11 @@
 }
 
 .myScore {
-  color: #ff6b9d;
+  color: #4a90e2;
 }
 
 .opponentScore {
-  color: #c239b3;
+  color: #e74c3c;
 }
 
 .scoreSymbol {
@@ -99,7 +100,7 @@
 }
 
 .myTurn {
-  color: #ff6b9d;
+  color: #4a90e2;
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -145,17 +146,17 @@
 }
 
 .resultWin {
-  background: linear-gradient(135deg, #ffd700 0%, #ff6b9d 100%);
+  background: #27ae60;
   color: white;
 }
 
 .resultLose {
-  background: linear-gradient(135deg, #c239b3 0%, #9b2c8f 100%);
+  background: #e74c3c;
   color: white;
 }
 
 .resultDraw {
-  background: linear-gradient(135deg, #ff6b9d 0%, #c239b3 100%);
+  background: #95a5a6;
   color: white;
 }
 
@@ -172,11 +173,11 @@
 
 /* Символы */
 .symbolX {
-  color: #ff6b9d;
+  color: #4a90e2;
 }
 
 .symbolO {
-  color: #c239b3;
+  color: #e74c3c;
 }
 
 /* Обертка игрового поля */
@@ -197,41 +198,27 @@
 .cell {
   aspect-ratio: 1;
   background: white;
-  border: 3px solid #ffe4f1;
-  border-radius: 20px;
+  border: 2px solid #e0e8f0;
+  border-radius: 8px;
   font-size: 48px;
   font-weight: 700;
   cursor: not-allowed;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
-}
-
-.cell::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #ffeef8 0%, #ffe4f1 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .cellActive {
   cursor: pointer;
-  border-color: #ffc4da;
-}
-
-.cellActive:hover::before {
-  opacity: 1;
+  border-color: #4a90e2;
 }
 
 .cellActive:hover {
-  border-color: #ff6b9d;
+  background: #f5f9fc;
   transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.2);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
 }
 
 .cellActive:active {
@@ -256,21 +243,19 @@
 }
 
 .cellX .cellValue {
-  color: #ff6b9d;
+  color: #4a90e2;
 }
 
 .cellO .cellValue {
-  color: #c239b3;
+  color: #e74c3c;
 }
 
-/* Выигрышная клетка: обновлено для яркого выделения */
+/* Выигрышная клетка */
 .cellWinning {
-  background: #fff0f5; /* Светло-розовый фон для выделения */
-  border-color: #ff6b9d; /* Цвет победы для рамки */
-  border-width: 4px; /* Утолщаем рамку */
-  box-shadow: 0 0 15px rgba(255, 107, 157, 0.5); /* Добавляем свечение */
-  
-  /* Анимация пульсации */
+  background: #e8f4f8;
+  border-color: #27ae60;
+  border-width: 3px;
+  box-shadow: 0 0 15px rgba(39, 174, 96, 0.3);
   animation: winningCellPulse 0.6s ease-in-out;
 }
 

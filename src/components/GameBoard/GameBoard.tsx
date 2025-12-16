@@ -78,7 +78,7 @@ export const GameBoard: React.FC = () => {
       return 'Ничья!';
     }
     const isWinner = gameState.winner === gameState.mySymbol;
-    return isWinner ? 'Вы победили! 🎉' : 'Вы проиграли 😔';
+    return isWinner ? 'Победа!' : 'Поражение';
   };
 
   const getResultClass = () => {
@@ -129,9 +129,9 @@ export const GameBoard: React.FC = () => {
         {gameState.isActive ? (
           <>
             {gameState.currentPlayer === gameState.mySymbol ? (
-              <span className={styles.myTurn}>✨ Ваш ход</span>
+              <span className={styles.myTurn}>Ваш ход</span>
             ) : (
-              <span className={styles.opponentTurn}>⏳ Ход противника</span>
+              <span className={styles.opponentTurn}>Ход противника</span>
             )}
           </>
         ) : showResult ? (

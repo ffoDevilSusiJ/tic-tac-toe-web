@@ -67,18 +67,15 @@ export const Menu: React.FC = () => {
 
         <div className={styles.buttonContainer}>
           <button className={styles.primaryButton} onClick={handleCreateGame}>
-            <span className={styles.buttonIcon}>✨</span>
-            <span>Создать игру</span>
+            Создать игру
+          </button>
+
+          <button className={styles.primaryButton} onClick={handlePlayComputer}>
+            Играть против компьютера
           </button>
 
           <button className={styles.secondaryButton} onClick={toggleJoinInput}>
-            <span className={styles.buttonIcon}>🎮</span>
-            <span>Присоединиться к игре</span>
-          </button>
-
-          <button className={styles.computerButton} onClick={handlePlayComputer}>
-            <span className={styles.buttonIcon}>🤖</span>
-            <span>Играть против компьютера</span>
+            Присоединиться к игре
           </button>
         </div>
 

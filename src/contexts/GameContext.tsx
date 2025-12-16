@@ -103,12 +103,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   // Обработка сообщений от WebSocket
   useEffect(() => {
     const handleMessage = (message: WSMessage) => {
-      console.log('📨 Processing message:', message);
+      console.log('Processing message:', message);
 
       switch (message.type) {
         case 'game_start':
           if (message.symbol) {
-            console.log('🎮 Game started, my symbol:', message.symbol);
+            console.log('Game started, my symbol:', message.symbol);
             startGame(message.symbol, message.score, message.roundNumber);
             setIsWaiting(false);
             
@@ -131,13 +131,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                 ? 'O'
                 : 'X';
 
-            console.log('👆 Move:', message.cell, 'by', symbol);
+            console.log('Move:', message.cell, 'by', symbol);
             updateBoard(message.cell, symbol);
           }
           break;
 
         case 'game_end':
-          console.log('🏁 Round ended:', message);
+          console.log('Round ended:', message);
           setWinner(message.winner as PlayerSymbol | null, message.isDraw || false);
           
           if (message.score) {
@@ -146,7 +146,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
           break;
 
         case 'round_start':
-          console.log('🔄 New round starting:', message.roundNumber);
+          console.log('New round starting:', message.roundNumber);
           if (message.roundNumber && message.score) {
             startNewRound(message.roundNumber);
             updateScore(message.score);
@@ -154,7 +154,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
           break;
 
         case 'error':
-          console.error('❌ Error from server:', message.error);
+          console.error('Error from server:', message.error);
           if (message.error === 'Game not found or is full') {
             alert('Игра не найдена или уже заполнена');
             navigate('/');
@@ -169,9 +169,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   // Handle computer moves
   useEffect(() => {
     if (opponentUuid === 'computer' && gameState.isActive && gameState.currentPlayer === 'O') {
+      console.log('Computer turn, making move...');
       makeComputerMove(gameState.board);
     }
-  }, [opponentUuid, gameState.isActive, gameState.currentPlayer, gameState.board, makeComputerMove]);
+  }, [opponentUuid, gameState.isActive, gameState.currentPlayer, makeComputerMove]);
 
   // Handle game end in computer mode
   useEffect(() => {
@@ -197,7 +198,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   }, [opponentUuid, gameState.isActive, gameState.winner, gameState.isDraw, gameState.roundNumber, gameState.score, sendGameResult, updateScore, startNewRound]);
 
   const createGame = useCallback(() => {
-    console.log('🎮 Creating game for:', playerUuid);
+    console.log('Creating game for:', playerUuid);
     const url = GameService.generateGameUrl(playerUuid);
     setGameUrl(url);
     setIsWaiting(true);
@@ -206,7 +207,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     wsService.connect(playerUuid);
 
     setTimeout(() => {
-      console.log('📤 Sending game_start');
+      console.log('Sending game_start');
       wsService.send({
         type: 'game_start',
         sourceUuid: playerUuid,
@@ -217,13 +218,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
   const joinGame = useCallback(
     (targetUuid: string) => {
-      console.log('🎮 Joining game:', targetUuid);
+      console.log('Joining game:', targetUuid);
       setOpponentUuid(targetUuid);
 
       wsService.connect(playerUuid, targetUuid);
 
       setTimeout(() => {
-        console.log('📤 Sending game_start to join');
+        console.log('Sending game_start to join');
         wsService.send({
           type: 'game_start',
           sourceUuid: playerUuid,
@@ -237,16 +238,16 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const makeMove = useCallback(
     (cell: number) => {
       if (!gameState.isActive || gameState.currentPlayer !== gameState.mySymbol) {
-        console.log('❌ Cannot make move');
+        console.log('Cannot make move');
         return;
       }
 
       if (gameState.board[cell] !== null) {
-        console.log('❌ Cell already occupied');
+        console.log('Cell already occupied');
         return;
       }
 
-      console.log('📤 Sending move:', cell);
+      console.log('Sending move:', cell);
       wsService.send({
         type: 'player_move',
         sourceUuid: playerUuid,
@@ -262,28 +263,28 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   }, []);
 
   const startComputerGame = useCallback(() => {
-    console.log('🎮 Starting computer game');
+    console.log('Starting computer game');
     startGame('X', { player: 0, computer: 0 }, 1);
     setOpponentUuid('computer');
   }, [startGame]);
 
   const makeLocalMove = useCallback((cell: number) => {
     if (!gameState.isActive || gameState.currentPlayer !== gameState.mySymbol) {
-      console.log('❌ Cannot make move');
+      console.log('Cannot make move');
       return;
     }
 
     if (gameState.board[cell] !== null) {
-      console.log('❌ Cell already occupied');
+      console.log('Cell already occupied');
       return;
     }
 
-    console.log('📤 Making local move:', cell);
+    console.log('Making local move:', cell);
     makeLocalMoveInternal(cell, gameState.mySymbol!);
   }, [gameState, makeLocalMoveInternal]);
 
   const resetGame = useCallback(() => {
-    console.log('🔄 Resetting game');
+    console.log('Resetting game');
     resetGameState();
     setIsWaiting(false);
     setGameUrl(null);
