@@ -195,7 +195,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [opponentUuid, gameState.isActive, gameState.winner, gameState.isDraw, gameState.roundNumber, gameState.score, sendGameResult, updateScore, startNewRound]);
+  }, [opponentUuid, gameState.isActive, gameState.winner, gameState.isDraw, gameState.roundNumber, sendGameResult, updateScore, startNewRound]);
 
   const createGame = useCallback(() => {
     console.log('Creating game for:', playerUuid);
