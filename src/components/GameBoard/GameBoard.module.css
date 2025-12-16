@@ -6,6 +6,22 @@
   max-width: 500px;
   width: 100%;
   backdrop-filter: blur(10px);
+  position: relative;
+}
+
+/* Никнейм игрока */
+.playerNickname {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(135deg, #ff6b9d 0%, #c239b3 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+  z-index: 10;
 }
 
 /* Счет */

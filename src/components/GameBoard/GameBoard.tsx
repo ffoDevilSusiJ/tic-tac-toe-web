@@ -4,9 +4,10 @@ import { getWinningLine } from '../../utils/gameLogic';
 import styles from './GameBoard.module.css';
 
 export const GameBoard: React.FC = () => {
-  const { gameState, makeMove, playerUuid, opponentUuid } = useGame();
+  const { gameState, makeMove, makeLocalMove, playerUuid, opponentUuid, playerNickname } = useGame();
   const [showResult, setShowResult] = useState(false);
   const [winningLine, setWinningLine] = useState<number[] | null>(null);
+  const isComputerGame = opponentUuid === 'computer';
 
   // Показываем результат после окончания раунда
   useEffect(() => {
@@ -35,7 +36,11 @@ export const GameBoard: React.FC = () => {
   }, [gameState.winner, gameState.isDraw, gameState.board]);
 
   const handleCellClick = (index: number) => {
-    makeMove(index);
+    if (isComputerGame) {
+      makeLocalMove(index);
+    } else {
+      makeMove(index);
+    }
   };
 
   const renderCell = (index: number) => {
@@ -65,8 +70,8 @@ export const GameBoard: React.FC = () => {
     );
   };
 
-  const myScore = playerUuid ? gameState.score[playerUuid] || 0 : 0;
-  const opponentScore = opponentUuid ? gameState.score[opponentUuid] || 0 : 0;
+  const myScore = isComputerGame ? (gameState.score['player'] || 0) : (playerUuid ? gameState.score[playerUuid] || 0 : 0);
+  const opponentScore = isComputerGame ? (gameState.score['computer'] || 0) : (opponentUuid ? gameState.score[opponentUuid] || 0 : 0);
 
   const getResultMessage = () => {
     if (gameState.isDraw) {
@@ -85,6 +90,13 @@ export const GameBoard: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      {/* Никнейм игрока */}
+      {playerNickname && (
+        <div className={styles.playerNickname}>
+          {playerNickname}
+        </div>
+      )}
+
       {/* Счет */}
       <div className={styles.scoreBoard}>
         <div className={styles.scoreItem}>
@@ -102,7 +114,7 @@ export const GameBoard: React.FC = () => {
         </div>
 
         <div className={styles.scoreItem}>
-          <div className={styles.scoreLabel}>Противник</div>
+          <div className={styles.scoreLabel}>{isComputerGame ? 'Компьютер' : 'Противник'}</div>
           <div className={`${styles.scoreValue} ${styles.opponentScore}`}>{opponentScore}</div>
           <div className={styles.scoreSymbol}>
             <span className={gameState.mySymbol === 'X' ? styles.symbolO : styles.symbolX}>

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGame } from '../../contexts/GameContext';
+import { NicknameModal } from '../NicknameModal/NicknameModal';
 import styles from './Menu.module.css';
 
 export const Menu: React.FC = () => {
-  const { createGame } = useGame();
+  const { createGame, startComputerGame, playerNickname, setPlayerNickname } = useGame();
   const [showJoinInput, setShowJoinInput] = useState(false);
+  const [showNicknameModal, setShowNicknameModal] = useState(false);
   const [joinUrl, setJoinUrl] = useState('');
   const navigate = useNavigate();
 
@@ -41,6 +43,20 @@ export const Menu: React.FC = () => {
     setJoinUrl('');
   };
 
+  const handlePlayComputer = () => {
+    if (!playerNickname) {
+      setShowNicknameModal(true);
+    } else {
+      startComputerGame();
+    }
+  };
+
+  const handleNicknameSubmit = (nickname: string) => {
+    setPlayerNickname(nickname);
+    setShowNicknameModal(false);
+    startComputerGame();
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.menu}>
@@ -58,6 +74,11 @@ export const Menu: React.FC = () => {
           <button className={styles.secondaryButton} onClick={toggleJoinInput}>
             <span className={styles.buttonIcon}>🎮</span>
             <span>Присоединиться к игре</span>
+          </button>
+
+          <button className={styles.computerButton} onClick={handlePlayComputer}>
+            <span className={styles.buttonIcon}>🤖</span>
+            <span>Играть против компьютера</span>
           </button>
         </div>
 
@@ -81,6 +102,8 @@ export const Menu: React.FC = () => {
           </div>
         )}
       </div>
+
+      {showNicknameModal && <NicknameModal onSubmit={handleNicknameSubmit} />}
     </div>
   );
 };

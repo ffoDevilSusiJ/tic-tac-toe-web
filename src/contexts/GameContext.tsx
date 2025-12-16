@@ -11,6 +11,7 @@ import { GameState, PlayerSymbol } from '../types/game.types';
 interface GameContextValue {
   playerUuid: string;
   gameState: GameState;
+  playerNickname: string | null;
   isWaiting: boolean;
   gameUrl: string | null;
   opponentUuid: string | null;
@@ -18,6 +19,9 @@ interface GameContextValue {
   joinGame: (targetUuid: string) => void;
   makeMove: (cell: number) => void;
   resetGame: () => void;
+  setPlayerNickname: (nickname: string) => void;
+  startComputerGame: () => void;
+  makeLocalMove: (cell: number) => void;
 }
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
@@ -36,6 +40,9 @@ interface GameProviderProps {
 
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [playerUuid] = useState(() => getOrCreatePlayerUUID());
+  const [playerNickname, setPlayerNicknameState] = useState<string | null>(() => {
+    return localStorage.getItem('playerNickname');
+  });
   const [isWaiting, setIsWaiting] = useState(false);
   const [gameUrl, setGameUrl] = useState<string | null>(null);
   const [opponentUuid, setOpponentUuid] = useState<string | null>(null);
@@ -52,6 +59,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     setWinner,
     updateScore,
     startNewRound,
+    makeMove: makeLocalMoveInternal,
   } = useGameState();
 
   // Обработка сообщений от WebSocket
@@ -120,6 +128,36 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     wsService.onMessage(handleMessage);
   }, [wsService, playerUuid, gameState.mySymbol, startGame, updateBoard, setWinner, updateScore, startNewRound, navigate]);
 
+  // Handle computer moves
+  useEffect(() => {
+    if (opponentUuid === 'computer' && gameState.isActive && gameState.currentPlayer === 'O') {
+      makeComputerMove(gameState.board);
+    }
+  }, [opponentUuid, gameState.isActive, gameState.currentPlayer, gameState.board, makeComputerMove]);
+
+  // Handle game end in computer mode
+  useEffect(() => {
+    if (opponentUuid === 'computer' && !gameState.isActive && (gameState.winner || gameState.isDraw)) {
+      // Update score
+      const newScore = { ...gameState.score };
+      if (gameState.winner === 'X') {
+        newScore['player'] = (newScore['player'] || 0) + 1;
+        sendGameResult(true); // Player won
+      } else if (gameState.winner === 'O') {
+        newScore['computer'] = (newScore['computer'] || 0) + 1;
+        sendGameResult(false); // Player lost
+      }
+      updateScore(newScore);
+
+      // Auto-restart after 5 seconds
+      const timer = setTimeout(() => {
+        startNewRound(gameState.roundNumber + 1);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [opponentUuid, gameState.isActive, gameState.winner, gameState.isDraw, gameState.roundNumber, gameState.score, sendGameResult, updateScore, startNewRound]);
+
   const createGame = useCallback(() => {
     console.log('🎮 Creating game for:', playerUuid);
     const url = GameService.generateGameUrl(playerUuid);
@@ -180,6 +218,73 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     [gameState, playerUuid, wsService]
   );
 
+  const setPlayerNickname = useCallback((nickname: string) => {
+    localStorage.setItem('playerNickname', nickname);
+    setPlayerNicknameState(nickname);
+  }, []);
+
+  const sendGameResult = useCallback(async (isWin: boolean) => {
+    if (!playerNickname) return;
+
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
+      await fetch(`${backendUrl}/api/game-result`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: playerNickname,
+          isWin,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to send game result:', error);
+    }
+  }, [playerNickname]);
+
+  const startComputerGame = useCallback(() => {
+    console.log('🎮 Starting computer game');
+    // Start game locally (no WebSocket needed)
+    startGame('X', { player: 0, computer: 0 }, 1);
+    setOpponentUuid('computer');
+  }, [startGame]);
+
+  const makeComputerMove = useCallback((currentBoard: (PlayerSymbol | null)[]) => {
+    // Find all empty cells
+    const emptyCells: number[] = [];
+    currentBoard.forEach((cell, index) => {
+      if (cell === null) {
+        emptyCells.push(index);
+      }
+    });
+
+    if (emptyCells.length > 0) {
+      // Random move
+      const randomIndex = Math.floor(Math.random() * emptyCells.length);
+      const cell = emptyCells[randomIndex];
+
+      setTimeout(() => {
+        makeLocalMoveInternal(cell, 'O');
+      }, 500); // Small delay to make it feel more natural
+    }
+  }, [makeLocalMoveInternal]);
+
+  const makeLocalMove = useCallback((cell: number) => {
+    if (!gameState.isActive || gameState.currentPlayer !== gameState.mySymbol) {
+      console.log('❌ Cannot make move');
+      return;
+    }
+
+    if (gameState.board[cell] !== null) {
+      console.log('❌ Cell already occupied');
+      return;
+    }
+
+    console.log('📤 Making local move:', cell);
+    makeLocalMoveInternal(cell, gameState.mySymbol!);
+  }, [gameState, makeLocalMoveInternal]);
+
   const resetGame = useCallback(() => {
     console.log('🔄 Resetting game');
     resetGameState();
@@ -193,6 +298,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const value: GameContextValue = {
     playerUuid,
     gameState,
+    playerNickname,
     isWaiting,
     gameUrl,
     opponentUuid,
@@ -200,6 +306,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     joinGame,
     makeMove,
     resetGame,
+    setPlayerNickname,
+    startComputerGame,
+    makeLocalMove,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
