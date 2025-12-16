@@ -75,10 +75,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       const cell = emptyCells[randomIndex];
 
       setTimeout(() => {
-        makeLocalMoveInternal(cell, 'O');
+        updateBoard(cell, 'O');
       }, 500);
     }
-  }, [makeLocalMoveInternal]);
+  }, [updateBoard]);
 
   const sendGameResult = useCallback(async (isWin: boolean) => {
     if (!playerNickname) return;
